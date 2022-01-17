@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'authentication_service.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({Key key}) : super(key: key);
+class Signin extends StatefulWidget {
+  const Signin({Key key}) : super(key: key);
 
   @override
-  _SignupState createState() => _SignupState();
+  _SigninState createState() => _SigninState();
 }
 
-class _SignupState extends State<Signup> {
+class _SigninState extends State<Signin> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,29 +46,31 @@ class _SignupState extends State<Signup> {
               height: 50,
               child: Center(
                   child: TextField(
+                controller: emailController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: "phone number",
+                  hintText: "email",
                 ),
               )),
             ),
-            Container(
-              width: 250,
-              height: 50,
-              child: Center(
-                  child: TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "username",
-                ),
-              )),
-            ),
+            // Container(
+            //   width: 250,
+            //   height: 50,
+            //   child: Center(
+            //       child: TextField(
+            //     keyboardType: TextInputType.number,
+            //     decoration: InputDecoration(
+            //       hintText: "username",
+            //     ),
+            //   )),
+            // ),
             SizedBox(height: 10),
             Container(
               width: 250,
               height: 50,
               child: Center(
                   child: TextField(
+                controller: passwordController,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   hintText: "password",
@@ -76,9 +82,12 @@ class _SignupState extends State<Signup> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, 'home');
+                  context.read<AuthenticationService>().signIn(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
                 },
-                child: Text('sign up'))
+                child: Text('sign in'))
           ],
         ),
       ),

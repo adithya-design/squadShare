@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'newgroup_page.dart';
 import 'squad_icon.dart';
 
 class HomePage extends StatelessWidget {
@@ -24,6 +26,9 @@ class HomePage extends StatelessWidget {
               Icon(Icons.directions_transit),
             ])),
       ),
+      routes: {
+        '/newgroup': (context) => const NewGroupPage(),
+      },
     );
   }
 }
@@ -59,10 +64,12 @@ class _MySquadsState extends State<MySquads> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/newgroup');
+        },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add_outlined),
-      ), 
+      ),
     );
   }
 }

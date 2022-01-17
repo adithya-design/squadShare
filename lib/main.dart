@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:squadfit_v0/authentication_service.dart';
 import 'package:squadfit_v0/home_page.dart';
-import 'package:squadfit_v0/signup.dart';
-import 'login.dart';
+import 'package:squadfit_v0/sign_in.dart';
+import 'newgroup_page.dart';
+import 'sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(SquadApp());
 }
 
@@ -12,14 +19,24 @@ class SquadApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const FirstPage(),
-        '/signup': (context) => const Signup(),
-        '/login': (context) => const LoginPage(),
-        'home': (context) => const HomePage(),
-      },
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+            create: (_) => AuthenticationService(FirebaseAuth.instance)),
+        StreamProvider(
+            create: (context) =>
+                context.read<AuthenticationService>().authStateChanges,
+            initialData: null),
+      ],
+      child: MaterialApp(
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const AuthenticationWrapper(),
+          '/signup': (context) => const Signin(),
+          '/login': (context) => SigninPage(),
+          'home': (context) => const HomePage(),
+        },
+      ),
     );
   }
 }
@@ -91,5 +108,19 @@ class _FirstPageState extends State<FirstPage> {
         ),
       ),
     );
+  }
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  const AuthenticationWrapper({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
+    if (firebaseUser != null) {
+      return HomePage();
+    }
+    return FirstPage();
   }
 }

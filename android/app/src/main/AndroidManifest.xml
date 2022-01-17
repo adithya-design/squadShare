@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.squadfit_v0">
    <application
+        android:name="androidx.multidex.MultiDexApplication"
         android:label="squadfit_v0"
         android:icon="@mipmap/ic_launcher">
-        <activity
+        <activity        
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
