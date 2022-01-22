@@ -22,20 +22,27 @@ class AuthenticationService {
     }
   }
 
-  Future<String> signUp({String email, String password}) async {
+  Future<String> signUp(
+      {String email, String password, String username, String imgURL}) async {
     try {
       await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then(
-            (value) => db
-                .collection('USERS')
-                .doc(value.user.uid)
-                .set({'email': email}),
+            (value) => db.collection('USERS').doc(value.user.uid).set({
+              'email': email,
+              'username': username,
+              'profile pic': imgURL,
+            }),
           );
+      print('User Sign up was succesful');
 
       return "Signed up";
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
   }
 }
