@@ -6,11 +6,27 @@ import 'package:provider/provider.dart';
 
 class SquadModel {
   List _members = [];
+  List _imgURL = [];
+  String ownerIMG;
   String squadName;
 
   SquadModel({this.squadName});
 
   List get getMembers => _members;
+
+  List get getURLS => _imgURL;
+
+  void addownerIMG(String url) {
+    ownerIMG = url;
+  }
+
+  void addimg(String url) {
+    _imgURL.add(url);
+  }
+
+  void removeimg(String url) {
+    _imgURL.removeWhere((element) => element == url);
+  }
 
   void addMember(String member) {
     _members.add(member);
@@ -126,17 +142,19 @@ class _ListofUsersState extends State<ListofUsers> {
                   backgroundColor: Colors.green[300],
                   child: Icon(Icons.check),
                   onPressed: () {
-                    squadinfo.addMember(userEMAIL());
                     try {
                       db.collection('squads').doc().set({
                         'Squadname': nameControl.text.trim(),
                         'ownerid ': userID(),
                         'ownermail ': userEMAIL(),
-                        'members': squadinfo.getMembers
+                        // 'ownerimg': squadinfo.ownerIMG,
+                        'members': squadinfo.getMembers,
+                        'profilePics': squadinfo.getURLS,
                       });
                     } catch (e) {
                       print(e);
                     }
+
                     Navigator.pop(context);
                   })
             ],
@@ -157,29 +175,44 @@ class UserTiles extends StatefulWidget {
 
 class _UserTilesState extends State<UserTiles> {
   bool _checked = false;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        widget.docu['email'],
-      ),
-      secondary: const Icon(Icons.supervised_user_circle),
-      autofocus: false,
-      activeColor: Colors.green,
-      checkColor: Colors.white,
-      selected: _checked,
-      value: _checked,
-      onChanged: (bool value) {
-        setState(() {
-          _checked = value;
-        });
-        if (value == true) {
-          widget.useModel.addMember(widget.docu['email']);
-        } else {
-          widget.useModel.removeMember(widget.docu['email']);
-        }
-      },
+    if (widget.docu['email'] != auth.currentUser.email) {
+      return CheckboxListTile(
+        title: Text(
+          widget.docu['email'],
+        ),
+        secondary: const Icon(Icons.supervised_user_circle),
+        autofocus: false,
+        activeColor: Colors.green,
+        checkColor: Colors.white,
+        selected: _checked,
+        value: _checked,
+        onChanged: (bool value) {
+          setState(() {
+            _checked = value;
+          });
+          if (value == true) {
+            widget.useModel.addMember(widget.docu['email']);
+            widget.useModel.addimg(widget.docu['imgURL']);
+          } else {
+            widget.useModel.removeMember(widget.docu['email']);
+            widget.useModel.removeimg(widget.docu['imgURL']);
+          }
+        },
+      );
+    }
+
+    widget.useModel.addMember(auth.currentUser.email);
+
+    widget.useModel.addimg(widget.docu['imgURL']);
+
+    // widget.useModel.addownerIMG(widget.docu['imgURL']);
+    return Container(
+      width: 0.0,
+      height: 0.0,
     );
   }
 }

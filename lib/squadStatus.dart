@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -8,14 +9,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:squadfit_v0/home_page.dart';
 
-class UserinfoPage extends StatefulWidget {
-  const UserinfoPage({Key key}) : super(key: key);
+class Status extends StatefulWidget {
+  final String squadID;
+
+  const Status({Key key, this.squadID}) : super(key: key);
 
   @override
-  _UserinfoPageState createState() => _UserinfoPageState();
+  _StatusState createState() => _StatusState();
 }
 
-class _UserinfoPageState extends State<UserinfoPage> {
+class _StatusState extends State<Status> {
   File image;
   final ImagePicker _picker = ImagePicker();
   String imageURL;
@@ -47,8 +50,10 @@ class _UserinfoPageState extends State<UserinfoPage> {
   // this works
   Future uploader() async {
     emailText = auth.currentUser.email;
-    firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref('ppics').child(emailText);
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref("status")
+        .child(widget.squadID)
+        .child(emailText);
     try {
       await ref.putFile(image);
 
@@ -70,9 +75,41 @@ class _UserinfoPageState extends State<UserinfoPage> {
     //   'imgURL': imageURL,
     // });
 
-    await db.collection('USERS').doc(auth.currentUser.uid).update({
-      'imgURL': imageURL,
+    int time = DateTime.now().microsecondsSinceEpoch;
+    db
+        .collection('squads')
+        .doc(widget.squadID)
+        .collection('status')
+        .doc(userEMAIL())
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (!documentSnapshot.exists) {
+        await db
+            .collection('squads')
+            .doc(widget.squadID)
+            .collection('status')
+            .doc(userEMAIL())
+            .set({
+          "pics": FieldValue.arrayUnion([imageURL]),
+        });
+      }
+      await db
+          .collection('squads')
+          .doc(widget.squadID)
+          .collection('status')
+          .doc(userEMAIL())
+          .update({
+        "pics": FieldValue.arrayUnion([imageURL]),
+      });
     });
+
+    // await db.collection('squads').doc(widget.squadID).collection('status').add({
+    //   '$userEMAIL()': imageURL,
+    // });
+    // await db.collection('USERS').doc(auth.currentUser.uid).update({
+    //   'imgURL': imageURL,
+
+    // });
   }
 
   // Within your widgets:
@@ -136,9 +173,9 @@ class _UserinfoPageState extends State<UserinfoPage> {
                     await uploader();
                     print('this is the URL of the image$imageURL');
 
-                    Navigator.popAndPushNamed(context, 'home');
+                    Navigator.pop(context);
 
-                    print("upload profile pic btn presswed");
+                    print("upload profile pic btn pressed");
                   },
                   child: Text('Upload Profile picture'))
             ],

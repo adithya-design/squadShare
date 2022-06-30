@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:squadfit_v0/authentication_service.dart';
-import 'home_page.dart';
+import '../home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,50 +21,6 @@ class _SignupState extends State<Signup> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  File image;
-  final ImagePicker _picker = ImagePicker();
-  String imageURL;
-  String emailText;
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
-    } on PlatformException catch (e) {
-      print('fialed to pick image: $e');
-    }
-  }
-
-  Future uploader() async {
-    emailText = emailController.text.trim();
-
-    try {
-      await firebase_storage.FirebaseStorage.instance
-          .ref('uploads/$emailText')
-          .putFile(image);
-      print("Uploadded");
-      await downloadURLExample();
-    } on FirebaseException catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> downloadURLExample() async {
-    emailText = emailController.text.trim();
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref('uploads/$emailText')
-        .getDownloadURL();
-
-    setState(() {
-      imageURL = downloadURL;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,29 +31,6 @@ class _SignupState extends State<Signup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: image != null
-                  ? ClipOval(
-                      child: Image.file(
-                        image,
-                        width: 160,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Container(
-                      width: 160,
-                      height: 160,
-                      child: Icon(Icons.camera_alt),
-                    ),
-            ),
-            ElevatedButton.icon(
-                onPressed: () {
-                  pickImage();
-                },
-                icon: Icon(Icons.camera_alt_rounded),
-                label: Text('upload profile pic')),
             InkWell(
               child: Container(
                 width: 250,
@@ -141,19 +75,16 @@ class _SignupState extends State<Signup> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  await uploader();
-                  context.read<AuthenticationService>().signUp(
+                  await context.read<AuthenticationService>().signUp(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
                         username: usernameController.text.trim(),
-                        imgURL: imageURL,
                       );
-                  print(imageURL);
-                  print(emailController.text);
+                  print("email: " + emailController.text);
                   print("button pressed");
-                  Navigator.popAndPushNamed(context, 'home');
+                  Navigator.pushNamed(context, 'ppUpload');
                 },
-                child: Text('Next'))
+                child: Text('Create'))
           ],
         ),
       ),
