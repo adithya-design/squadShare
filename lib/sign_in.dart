@@ -81,11 +81,12 @@ class _SigninState extends State<Signin> {
               height: 10,
             ),
             ElevatedButton(
-                onPressed: () {
-                  context.read<AuthenticationService>().signIn(
+                onPressed: () async {
+                  await context.read<AuthenticationService>().signIn(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
                       );
+                  Navigator.pushNamed(context, 'home');
                 },
                 child: Text('sign in'))
           ],

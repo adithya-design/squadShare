@@ -4,7 +4,7 @@ import 'package:squadfit_v0/authentication_service.dart';
 import 'package:squadfit_v0/home_page.dart';
 import 'package:squadfit_v0/sign_in.dart';
 import 'uploaPP.dart';
-import 'Create_New_Squad/newgroup_page.dart';
+import '../Create_New_Squad/newgroup_page.dart';
 import 'sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,12 +37,27 @@ class SquadApp extends StatelessWidget {
           '/signup': (context) => Signup(),
           'home': (context) => const HomePage(),
           'ppUpload': (context) => const UserinfoPage(),
+          '/newgroup': (context) => const ScaffoldPage(),
         },
       ),
     );
   }
 }
 
+class AuthenticationWrapper extends StatelessWidget {
+  const AuthenticationWrapper({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+    if (firebaseUser != null) {
+      return HomePage();
+    }
+    return FirstPage();
+  }
+}
+
+//Sign in or sing up page
 class FirstPage extends StatefulWidget {
   const FirstPage({Key key}) : super(key: key);
 
@@ -120,19 +135,5 @@ class _FirstPageState extends State<FirstPage> {
         ),
       ),
     );
-  }
-}
-
-class AuthenticationWrapper extends StatelessWidget {
-  const AuthenticationWrapper({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
-
-    if (firebaseUser != null) {
-      return HomePage();
-    }
-    return FirstPage();
   }
 }
