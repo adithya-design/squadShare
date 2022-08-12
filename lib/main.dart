@@ -69,7 +69,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[100],
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -77,11 +77,11 @@ class _FirstPageState extends State<FirstPage> {
           children: [
             Container(
               child: Text(
-                'Squad \n     Fit',
+                'squadshare',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
-                    fontSize: 90),
+                    fontSize: 50),
               ),
             ),
             SizedBox(
@@ -92,11 +92,11 @@ class _FirstPageState extends State<FirstPage> {
                 decoration: BoxDecoration(
                   // boxShadow: BoxShadow(),
                   border: Border.all(
-                      color: Colors.yellow[700],
+                      color: Color.fromARGB(255, 68, 68, 67),
                       style: BorderStyle.solid,
                       width: 3),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.amber[400],
+                  color: Color.fromARGB(255, 26, 26, 26),
                 ),
                 width: 250,
                 height: 50,
@@ -115,11 +115,11 @@ class _FirstPageState extends State<FirstPage> {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.green[600],
+                      color: Color.fromARGB(255, 68, 68, 67),
                       style: BorderStyle.solid,
                       width: 2.5),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.green[400],
+                  color: Color.fromARGB(255, 26, 26, 26),
                 ),
                 width: 250,
                 height: 50,

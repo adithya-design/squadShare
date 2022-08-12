@@ -27,19 +27,6 @@ class SquadIcon extends StatelessWidget {
                 height: 200,
                 width: 250,
                 decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: -12.0,
-                        blurRadius: 12.0,
-                      ),
-                      BoxShadow(
-                        color: Colors.grey[900], //color of shadow
-                        spreadRadius: 5, //spread radius
-                        blurRadius: 7, // blur radius
-                        offset: Offset(0, 2),
-                      ),
-                    ],
                     color: Colors.grey[900],
                     borderRadius: BorderRadius.circular(10)),
                 // padding: EdgeInsets.all(20.0),

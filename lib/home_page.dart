@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Create_New_Squad/newgroup_page.dart';
@@ -31,13 +33,13 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, '/newgroup');
             },
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.orange[900],
+            backgroundColor: Colors.orange[900],
+            foregroundColor: Colors.black,
             child: const Icon(Icons.add_outlined),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          backgroundColor: Color(000000),
+          backgroundColor: Colors.white,
           bottomNavigationBar: menu(),
           appBar: AppBar(
             title: Text(
@@ -64,9 +66,11 @@ class HomePage extends StatelessWidget {
             ],
             backgroundColor: Colors.grey[900],
           ),
+          //APP BAR
           body: TabBarView(children: [
             MySquads(),
-            Icon(Icons.directions_transit),
+            Container(child: Image.asset("assets/working.png"))
+            // Icon(Icons.directions_transit),
             // ClientSquads(),
           ]),
         ),
@@ -153,7 +157,7 @@ class _MySquadsState extends State<MySquads> {
                 child: CarouselSlider(
                   items: snapshot.data.docs.map((document) {
                     return SquadIcon(
-                      color: Colors.amber[300],
+                      color: Color.fromARGB(255, 231, 140, 36),
                       icon: Icon(Icons.ac_unit),
                       name: document['Squadname'],
                       id: document.id,

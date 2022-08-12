@@ -16,25 +16,26 @@ class _SigninState extends State<Signin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('squad fit'),
+        title: Text('squadshare'),
+        backgroundColor: Color.fromARGB(255, 32, 32, 32),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Squad \n     Fit ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 80),
-                ),
-              ),
-            ),
+            // Container(
+            //   child: Flexible(
+            //     fit: FlexFit.loose,
+            //     child: Text(
+            //       'squadshare ',
+            //       style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontStyle: FontStyle.italic,
+            //           fontSize: 40),
+            //     ),
+            //   ),
+            // ),
             Flexible(
               fit: FlexFit.loose,
               child: SizedBox(
@@ -81,6 +82,10 @@ class _SigninState extends State<Signin> {
               height: 10,
             ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 32, 32, 32), // background
+                  onPrimary: Colors.white, // foreground
+                ),
                 onPressed: () async {
                   await context.read<AuthenticationService>().signIn(
                         email: emailController.text.trim(),

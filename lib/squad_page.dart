@@ -43,6 +43,7 @@ class _SquadPageState extends State<SquadPage> {
           print(snapshot.data.get('Squadname'));
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.grey[900],
               title: Text(snapshot.data.get('Squadname')),
               actions: [
                 PopupMenuButton(
@@ -104,81 +105,41 @@ class _SquadPageState extends State<SquadPage> {
                           itemsLength: l,
                           itemBuilder: (context, index) {
                             // Can be any widget, preferably a circle
-                            return Expanded(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  var smallestBoundary = min(
-                                      constraints.maxHeight,
-                                      constraints.maxWidth);
-                                  List li = snapshot.data.get('members');
-                                  int l = li.length;
-                                  return CircularWidgets(
-                                    itemsLength: l,
-                                    itemBuilder: (context, index) {
-                                      // Can be any widget, preferably a circle
-                                      return CircleAvatar(
-                                          backgroundColor: Colors.amber);
-                                    },
-                                    innerSpacing: 10,
-                                    // smallestBoundary / minnerSpacingDivider,
-                                    radiusOfItem: 20,
-                                    // smallestBoundary / mradiusOfItemDivider,
-                                    centerWidgetRadius: 70,
-                                    // smallestBoundary /
-                                    //     mcenterWidgetRadiusDivider,
-                                    centerWidgetBuilder: (context) {
-                                      return SingleCircle(
-                                        squadId: widget.squadID,
-                                        net: snapshot.data.get('profilePics'),
-                                        index: index,
-                                        list: snapshot.data.get('members'),
-                                        // txt: snapshot.data.get('Squadname'),
-                                        color: Colors.grey,
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                            return SingleCircle(
+                              squadId: widget.squadID,
+                              net: snapshot.data.get('profilePics'),
+                              index: index,
+                              list: snapshot.data.get('members'),
+                              // txt: snapshot.data.get('Squadname'),
+                              color: Colors.grey,
                             );
+                            //
                           },
-                          innerSpacing: 1,
+                          innerSpacing: 80,
                           //  smallestBoundary / innerSpacingDivider,
-                          radiusOfItem: 190,
+                          radiusOfItem: 70,
                           centerWidgetRadius:
                               smallestBoundary / centerWidgetRadiusDivider,
                           centerWidgetBuilder: (context) {
                             // owner cirlce
-                            return FloatingActionButton(
+
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: CircleBorder(),
+                                  primary: Colors.grey[900],
+                                  padding: EdgeInsets.all(10)),
                               onPressed: () {
-                                db
-                                    .collection('squads')
-                                    .doc(widget.squadID)
-                                    .collection('status')
-                                    .doc(snapshot.data.get('ownermail '))
-                                    .get()
-                                    .then((DocumentSnapshot documentSnapshot) {
-                                  //commetn her
-                                  if (documentSnapshot.exists ||
-                                      auth.currentUser.email ==
-                                          snapshot.data.get('ownermail ')) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Status(
-                                                squadID: snapshot.data.id,
-                                              )),
-                                    );
-                                  } else {
-                                    final snakbar = SnackBar(
-                                        content:
-                                            Text("coach has not uploaded yet"));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snakbar);
-                                    print("coach has not uploaded yet");
-                                  }
-                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Status(
+                                            squadID: snapshot.data.id,
+                                          )),
+                                );
                               },
-                              child: Icon(Icons.access_alarms),
+                              child: Icon(
+                                Icons.circle,
+                              ),
                             );
                           }
                           //   return BigCirlce(
@@ -192,36 +153,6 @@ class _SquadPageState extends State<SquadPage> {
                   ),
                 ),
               ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                db
-                    .collection('squads')
-                    .doc(widget.squadID)
-                    .collection('status')
-                    .doc(snapshot.data.get('ownermail '))
-                    .get()
-                    .then((DocumentSnapshot documentSnapshot) {
-                  //commetn her
-                  if (documentSnapshot.exists ||
-                      auth.currentUser.email ==
-                          snapshot.data.get('ownermail ')) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Status(
-                                squadID: snapshot.data.id,
-                              )),
-                    );
-                  } else {
-                    final snakbar =
-                        SnackBar(content: Text("coach has not uploaded yet"));
-                    ScaffoldMessenger.of(context).showSnackBar(snakbar);
-                    print("coach has not uploaded yet");
-                  }
-                });
-              },
-              child: Icon(Icons.access_alarms),
             ),
           );
         });

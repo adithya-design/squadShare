@@ -25,7 +25,9 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,6 +76,10 @@ class _SignupState extends State<Signup> {
               )),
             ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 32, 32, 32), // background
+                  onPrimary: Colors.white, // foreground
+                ),
                 onPressed: () async {
                   await context.read<AuthenticationService>().signUp(
                         email: emailController.text.trim(),
